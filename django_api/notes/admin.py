@@ -1,5 +1,14 @@
 from django.contrib import admin
 
-from .models import Notes
+from .models import Notes, Sharing
 
-admin.site.register(Notes)
+class NotesAdmin(admin.ModelAdmin):
+    list_display = ("title", "text", "creator")
+    list_filter = ("created_at", )
+
+class SharingAdmin(admin.ModelAdmin):
+    list_display = ("users", "note", "can_edit")
+    list
+
+admin.site.register(Notes, NotesAdmin)
+admin.site.register(Sharing, SharingAdmin)
