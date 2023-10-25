@@ -5,7 +5,6 @@ import axios from "axios";
 import { BASE_URL } from "../config";
 import NotesList from "../components/NotesList";
 import Scroll from "../components/Scroll";
-import SpeedDialButton from "@mui/material/SpeedDial";
 
 const Home: React.FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
