@@ -1,9 +1,13 @@
-import React, { useEffect, useRef, useCallback } from "react";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useCallback, useEffect, useRef } from "react";
+
+interface ScrollProps {
+  children: React.ReactNode;
+}
 
 const ScrollContainer = styled(Box)(() => ({
-  height: `calc(100% - 150px)`,
+  height: `calc(100vh - 190px)`,
   overflowY: "scroll",
   "&::-webkit-scrollbar": {
     width: "8px",
@@ -24,20 +28,9 @@ const ScrollContainer = styled(Box)(() => ({
   },
 }));
 
-function Scroll({ children }) {
-  const scrollRef = useRef(null);
+const Scroll = ({ children }: ScrollProps) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-  // const scrollToBottom = useCallback(() => {
-  //   if (scrollRef.current) {
-  //     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   // scrollToBottom();
-  // }, [children]);
-
-  return <ScrollContainer sx={{marginTop:"20px",marginBottom:"20px"}} ref={scrollRef}>{children}</ScrollContainer>;
-}
-
+  return <ScrollContainer sx={{marginTop:"50px"}} ref={scrollRef}>{children}</ScrollContainer>;
+};
 export default Scroll;

@@ -15,3 +15,7 @@ class NotesSerializer(serializers.ModelSerializer):
         instance.text = validated_data.get('text', instance.text)
         instance.save()
         return instance
+
+    def create(self, validated_data):
+        comment = Notes.objects.create(**validated_data)
+        return comment
