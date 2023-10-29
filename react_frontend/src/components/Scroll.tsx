@@ -7,7 +7,7 @@ interface ScrollProps {
 }
 
 const ScrollContainer = styled(Box)(() => ({
-  height: `calc(100vh - 190px)`,
+  height: `calc(100vh - 20px)`,
   overflowY: "scroll",
   "&::-webkit-scrollbar": {
     width: "8px",
@@ -31,6 +31,6 @@ const ScrollContainer = styled(Box)(() => ({
 const Scroll = ({ children }: ScrollProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  return <ScrollContainer sx={{marginTop:"50px"}} ref={scrollRef}>{children}</ScrollContainer>;
+  return <ScrollContainer sx={{marginTop:"20px"}} ref={scrollRef}>{children}</ScrollContainer>;
 };
 export default Scroll;

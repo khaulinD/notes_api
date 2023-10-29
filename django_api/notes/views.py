@@ -6,12 +6,12 @@ from rest_framework.response import Response
 
 from .filters.notes_filter import NoteFilters
 from .filters.sharing_filters import SharingFilter
-from .models import Notes, Comments, Sharing, NotesBasket
+from .models import Notes, Comments, Sharing
 from .schemas import note_list_view
 from .serializers.notes_serializers import NotesSerializer
 from .serializers.comments_serializer import CommentsSerializer
 from .serializers.sharing_serializer import SharingSerializer
-from .serializers.notesbasket_serializer import NotesBasketSerializer
+# from .serializers.notesbasket_serializer import NotesBasketSerializer
 from django_filters import rest_framework as filters
 
 # Create your views here.
@@ -51,24 +51,31 @@ class NotesViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     #
-    def retrieve(self, request, pk=None):
-        queryset = Notes.objects.all()
-        user = get_object_or_404(queryset, pk=pk)
-        serializer = NotesSerializer(user)
-        return Response(serializer.data)
+    # def retrieve(self, request, pk=None):
+    #     queryset = Notes.objects.all()
+    #     user = get_object_or_404(queryset, pk=pk)
+    #     serializer = NotesSerializer(user)
+    #     return Response(serializer.data)
 
-    def partial_update(self, request, pk=None):
-        note = get_object_or_404(self.queryset, pk=pk)
+    def update(self, request, pk=None):
+        # Найти запись по title
+        note = get_object_or_404(self.queryset, id=pk)
+
+        # Обновить запись с данными из запроса
         serializer = NotesSerializer(note, data=request.data)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
-        # Удаление существующего объекта
+        # Найти запись по title
         note = get_object_or_404(self.queryset, pk=pk)
+
+        # Удаление существующей записи
         note.delete()
+
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class CommentViewSet(viewsets.ViewSet):
@@ -123,10 +130,10 @@ class SharingViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
 
-class NotesBasketViewSet(viewsets.ViewSet):
-    queryset = NotesBasket.objects.all()
-    serializer_class = NotesBasketSerializer
-
-    def list(self, request):
-        serializer = self.serializer_class(self.queryset, many=True)
-        return Response(serializer.data)
+# class NotesBasketViewSet(viewsets.ViewSet):
+#     queryset = NotesBasket.objects.all()
+#     serializer_class = NotesBasketSerializer
+#
+#     def list(self, request):
+#         serializer = self.serializer_class(self.queryset, many=True)
+#         return Response(serializer.data)

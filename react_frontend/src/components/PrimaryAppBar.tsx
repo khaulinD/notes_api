@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {MouseEventHandler, useEffect, useState} from "react";
 import {
     Box,
     Divider,
     IconButton,
     InputBase,
     Typography,
-    Paper, Avatar
+    Paper, Container,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CachedIcon from '@mui/icons-material/Cached';
@@ -14,21 +14,26 @@ import CalendarViewDayIcon from '@mui/icons-material/CalendarViewDay';
 import GridViewIcon from '@mui/icons-material/GridView';
 import ToogleDraw from "./PrimaryComponents/ToogleDraw";
 import AccountMenu from "./PrimaryComponents/AccountButtom.tsx";
-
-
+import MenuIcon from '@mui/icons-material/Menu';
+import "./styles/PrimaryAppBar.css"
 // Define the props interface for the PrimaryAppBar component
 interface PrimaryAppBarProps {
   onSearch: (text: string) => void; // Callback function for searching
   setData: (data: boolean) => void; // Function for updating data
+  sideBarActivity: () => void;
 }
+// interface Props {
+//     pen: boolean;
+//     handleDrawerClose: () => void;
+//     handleDrawerOpen: () => void;
+// }
 
 
-
-const PrimaryAppBar: React.FC<PrimaryAppBarProps> = ({ onSearch, setData }) => {
+const PrimaryAppBar: React.FC<PrimaryAppBarProps> = ({ onSearch, setData, sideBarActivity}) => {
   const [isSearched, setIsSearched] = useState(false); // State to track search
   const [searchText, setSearchText] = useState(""); // State for search text
   const [notesPosition, setNotesPosition] = useState(false); // State for notes position
-      const [showToogleDraw, setShowToogleDraw] = useState(false);
+    const [showToogleDraw, setShowToogleDraw] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -60,12 +65,31 @@ const PrimaryAppBar: React.FC<PrimaryAppBarProps> = ({ onSearch, setData }) => {
     setNotesPosition(!notesPosition); // Invert the notes position state
     setData(notesPosition); // Call the function to update data
   };
-
+  //   const handleClick = () => {
+  //   // Вызовите функцию обратного вызова и передайте данные при клике
+  //   setSideBarActivity();
+  // };
   return (
+      <Box sx={{width:"100%"}}>
     <Box sx={{ paddingTop: "10px", display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
-      <Box sx={{ display: isSearched ? "none" : "flex", alignItems: "center", marginLeft: "20px", marginRight: "50px" }}>
-        <img alt="logo" src="https://www.gstatic.com/images/branding/product/1x/keep_2020q4_48dp.png" />
-        <Typography>Keep</Typography>
+
+      <Box sx={{ display: isSearched ? "none" : "flex", alignItems: "center", marginRight:"20px", marginLeft: "20px" }}>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ padding:"12px" }}
+            onClick={sideBarActivity}
+          >
+            <MenuIcon  />
+          </IconButton>
+                <img
+              alt="logo"
+              src="https://www.gstatic.com/images/branding/product/1x/keep_2020q4_48dp.png"
+              className="logo"
+            />
+        <Typography variant="h5" component="h2" sx={{color:"gray"}}>Keep</Typography>
       </Box>
       <Paper
         component="form"
@@ -77,7 +101,8 @@ const PrimaryAppBar: React.FC<PrimaryAppBarProps> = ({ onSearch, setData }) => {
           alignItems: 'center',
           width: showToogleDraw ? "400": "700px",
           maxHeight: 50,
-            marginRight:"20px"
+            marginRight:"20px",
+            backgroundColor:"#F1F3F4"
         }}
       >
         <InputBase
@@ -109,7 +134,10 @@ const PrimaryAppBar: React.FC<PrimaryAppBarProps> = ({ onSearch, setData }) => {
             {/*<Avatar sx={{ cursor: "pointer", marginLeft: "40px" }}>H</Avatar>*/}
           </Box>
       }
+
     </Box>
+      <hr style={{ color: "gray" }} />
+      </Box>
   );
 };
 

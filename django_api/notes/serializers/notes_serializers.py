@@ -11,8 +11,10 @@ class NotesSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # Обновление существующего объекта Notes
-        instance.title = validated_data.get('title', instance.title)
-        instance.text = validated_data.get('text', instance.text)
+        # instance.title = validated_data.get('title', instance.title)
+        # instance.text = validated_data.get('text', instance.text)
+        instance.is_in_basket = validated_data.get('is_in_basket', instance.is_in_basket)
+        instance.creator = validated_data.get('creator', instance.creator)
         instance.save()
         return instance
 

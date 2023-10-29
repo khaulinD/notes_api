@@ -7,12 +7,13 @@ class Notes(models.Model):
     text = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="note_creator")
+    is_in_basket = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
 
-class NotesBasket(models.Model):
-    notes = models.ForeignKey(Notes, on_delete=models.CASCADE)
+# class NotesBasket(models.Model):
+#     notes = models.ForeignKey(Notes, on_delete=models.CASCADE)
 
 class Attachments(models.Model):
     note = models.ForeignKey(Notes, on_delete=models.CASCADE,)
