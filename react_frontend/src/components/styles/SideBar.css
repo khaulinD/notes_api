@@ -1,0 +1,39 @@
+
+/*.SideBarElementsClose{*/
+/*    background-color:#FEEFC3 ;*/
+/*    display: flex;*/
+/*    border-radius: 50%;*/
+/*    height: 50px;*/
+/*    width:50px;*/
+/*    !*justify-content: flex-start;*!*/
+/*    !*align-items: center;*!*/
+
+/*    justify-content: center;*/
+/*    align-items: center;*/
+
+/*}*/
+.SideBarElementsClose{
+    /*background-color:#FEEFC3 ;*/
+    display: flex;
+    border-radius: 50%;
+    height: 50px;
+    width:50px;
+    margin-left:12px;
+    justify-content: center;
+    align-items: center;
+
+}
+.SideBarElementsOpen{
+    /*background-color:#FEEFC3 ;*/
+    display: flex;
+    border-radius: 0 100px 100px 0;
+    height: 50px;
+    width:255px;
+    padding-left: 25px;
+    align-items: center;
+    transition: width 0.3s;
+}
+.SideBarElementsText{
+    margin-left: 25px !important;
+
+}
