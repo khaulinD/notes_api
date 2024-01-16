@@ -2,28 +2,25 @@ from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .filters.notes_filter import NoteFilters
-from .filters.sharing_filters import SharingFilter
-from .models import Notes, Comments, Sharing
-from .schemas import note_list_view
+from .models import Notes, Comments
 from .serializers.notes_serializers import NotesSerializer
 from .serializers.comments_serializer import CommentsSerializer
-from .serializers.sharing_serializer import SharingSerializer
-# from .serializers.notesbasket_serializer import NotesBasketSerializer
-from django_filters import rest_framework as filters
-
-# Create your views here.
-
 
 
 class NotesViewSet(viewsets.ViewSet):
-    queryset = Notes.objects.order_by('-id').all()
+    # queryset = Notes.objects.order_by('-id').select_related().all()
+    queryset = Notes.objects.prefetch_related(
+                    'extra_user',  # Fetch extra_user related data
+                    'notetouser_set'  # Fetch NoteToUser related data
+                ).order_by('-id').all()
     serializer_class = NotesSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = NoteFilters
-
+    permission_classes = [IsAuthenticated]
 
     def list(self, request):
         queryset = self.filterset_class(request.GET, self.queryset).qs
@@ -58,11 +55,10 @@ class NotesViewSet(viewsets.ViewSet):
     #     return Response(serializer.data)
 
     def update(self, request, pk=None):
-        # Найти запись по title
         note = get_object_or_404(self.queryset, id=pk)
 
         # Обновить запись с данными из запроса
-        serializer = NotesSerializer(note, data=request.data)
+        serializer = NotesSerializer(note, data=request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
@@ -113,21 +109,7 @@ class CommentViewSet(viewsets.ViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class SharingViewSet(viewsets.ViewSet):
-    queryset = Sharing.objects.select_related("note").select_related("users").all()
-    serializer_class = SharingSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filterset_class = SharingFilter
 
-    def list(self, request):
-        queryset = self.filterset_class(request.GET, self.queryset).qs
-        serializer = SharingSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        one_sharing_note = get_object_or_404(self.queryset, pk=pk)
-        serializer = SharingSerializer(one_sharing_note)
-        return Response(serializer.data)
 
 
 # class NotesBasketViewSet(viewsets.ViewSet):

@@ -1,14 +1,18 @@
 from django.contrib import admin
+from .models import Notes
+from account.models import Account
 
-from .models import Notes, Sharing
 
-class NotesAdmin(admin.ModelAdmin):
-    list_display = ("title", "text", "creator")
-    list_filter = ("created_at", )
+class NoteToUserInline(admin.TabularInline):
+    model = Notes.extra_user.through
+    extra = 1
 
-class SharingAdmin(admin.ModelAdmin):
-    list_display = ("users", "note", "can_edit")
-    list
+class NoteAdmin(admin.ModelAdmin):
+    list_display = ('title', 'creator', 'created_at', 'is_in_basket')
+    inlines = [NoteToUserInline]
 
-admin.site.register(Notes, NotesAdmin)
-admin.site.register(Sharing, SharingAdmin)
+# class AccountAdmin(admin.ModelAdmin):
+#     filter_horizontal = ('shared_notes',)
+
+admin.site.register(Notes, NoteAdmin)
+# admin.site.register(Account, AccountAdmin)

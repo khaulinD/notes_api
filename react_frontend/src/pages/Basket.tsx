@@ -10,20 +10,22 @@ import {
     updateIsInBasket
 } from "../components/requests/request_to_db.ts";
 import SideBar from "../components/SideBar.tsx";
+import useAxiosWithJwtInterceptor from "../helper/jwtinterseptor.ts";
 
 const Basket: React.FC = () => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [data, setData] = useState<boolean>(true);
   const [sideBar, setSideBar] = useState(false)
+    const jwtAxios = useAxiosWithJwtInterceptor()
     useEffect(() => {
       const fetchData = async () => {
-        const noteResults = await fetchContent("notes",true);
+        const noteResults = await fetchContent("notes",true,jwtAxios);
         setSearchResults(noteResults);
       };
       fetchData();
     }, []);
    const  handleSearch = async (searchText: string) => {
-      const noteResultsWithFilter:any = await fetchContentWithTitle("notes", searchText,true);
+      const noteResultsWithFilter:any = await fetchContentWithTitle("notes", searchText,true,jwtAxios);
       setSearchResults(noteResultsWithFilter);
 
   };
@@ -39,14 +41,14 @@ const Basket: React.FC = () => {
         const noteId = newNotes[index].id
         newNotes.splice(index, 1);
         await setSearchResults(newNotes);
-        await updateIsInBasket(noteId,false);
+        await updateIsInBasket(noteId,false, jwtAxios);
     };
     const deleteNote = async (index: number) => {
         const  newNotes = [...searchResults];
         const noteId = newNotes[index].id
         newNotes.splice(index, 1);
         await setSearchResults(newNotes);
-        await deleteSomeNote(noteId)
+        await deleteSomeNote(noteId, jwtAxios)
     };
 
   return (
@@ -61,8 +63,8 @@ const Basket: React.FC = () => {
       <Scroll>
         <NotesList results={searchResults}
                    positionData={data}
-                   sideBarOpen={sideBar}
-                   setSideBarOpen={setSideBar}
+                   // sideBarOpen={sideBar}
+                   // setSideBarOpen={setSideBar}
                    deleteNote={deleteNote}
                    isSpecial={true}
                    restoreNote={restoreNote}/>

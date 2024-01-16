@@ -1,11 +1,12 @@
 import {
-    Box, Link,
+    Box, Hidden, Link,
     Typography,
 } from "@mui/material";
 import "./styles/SideBar.css"
 import EmojiObjectsOutlinedIcon from '@mui/icons-material/EmojiObjectsOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import GroupAddOutlinedIcon from '@mui/icons-material/GroupAddOutlined';
 import React, {useEffect, useState} from "react";
 type Props = {
   open: boolean;
@@ -28,6 +29,7 @@ const SideBar: React.FC<Props> = ({ open,setSideBar  }) => {
     const [menuItems] = useState([
     { title: "Notes", url: "/" , icon: EmojiObjectsOutlinedIcon },
     { title: "Notification", url: "/notification", icon: NotificationsNoneOutlinedIcon },
+    { title: "Sharing Notes", url: "/sharingnotes", icon: GroupAddOutlinedIcon },
     { title: "Basket", url: "/basket" , icon: DeleteOutlinedIcon },
     // Добавьте другие пункты меню здесь
   ]);
@@ -66,6 +68,7 @@ const SideBar: React.FC<Props> = ({ open,setSideBar  }) => {
 
         }}
       >
+
           {menuItems.map((menuItem, index) => (
         <Link key={index} sx={{cursor:"pointer"}} color="inherit" underline="none" href={menuItem.url} >
           <Box
@@ -82,7 +85,7 @@ const SideBar: React.FC<Props> = ({ open,setSideBar  }) => {
               className="SideBarElementsText"
               variant="h6"
               component="h5"
-              sx={{ display: open ? "block" : "none" }}
+              sx={{ display: open ? "block" : "none", textWrap:"nowrap" }}
             >
               {menuItem.title}
             </Typography>
@@ -90,9 +93,11 @@ const SideBar: React.FC<Props> = ({ open,setSideBar  }) => {
         </Link>
       ))}
 
+
       </Box>
 
     </Box>
+
   );
 };
 export default SideBar;

@@ -3,16 +3,18 @@ import { Box, Paper, TextField, IconButton, Typography, ClickAwayListener } from
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from '@mui/icons-material/Close';
 import sendDataToServer  from "./sendNote.ts"
+import useAxiosWithJwtInterceptor from "../../helper/jwtinterseptor.ts";
 
 
 const NewNote = ({onAddNote }) => {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [fullAdd, setFullAdd] = useState(false);
-
+  const jwtAxios = useAxiosWithJwtInterceptor()
   const handleAddNote = () => {
+
     if (text.trim() !== "") {
-      sendDataToServer(title,text)
+      sendDataToServer(title,text,jwtAxios)
         // addDataToDictionary(title, text);
        onAddNote(title, text);
       setTitle("");
