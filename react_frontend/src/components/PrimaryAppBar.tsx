@@ -1,11 +1,11 @@
-import React, {MouseEventHandler, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Box,
     Divider,
     IconButton,
     InputBase,
     Typography,
-    Paper, Container,
+    Paper,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import CachedIcon from '@mui/icons-material/Cached';
@@ -35,6 +35,7 @@ const PrimaryAppBar: React.FC<PrimaryAppBarProps> = ({ onSearch, setData, sideBa
   const [notesPosition, setNotesPosition] = useState(false); // State for notes position
     const [showToogleDraw, setShowToogleDraw] = useState(false);
 
+
   useEffect(() => {
     const handleResize = () => {
       // Проверяем размер экрана и устанавливаем, должен ли отображаться ToogleDraw
@@ -44,7 +45,6 @@ const PrimaryAppBar: React.FC<PrimaryAppBarProps> = ({ onSearch, setData, sideBa
         setShowToogleDraw(false);
       }
     };
-
     // Добавляем обработчик изменения размера окна при загрузке компонента
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -123,7 +123,7 @@ const PrimaryAppBar: React.FC<PrimaryAppBarProps> = ({ onSearch, setData, sideBa
 
 
       {showToogleDraw ? <ToogleDraw /> :
-          <Box sx={{ display: "flex", flexWrap: "nowrap", right: "0px" }}>
+          <Box sx={{ display: "flex", flexWrap: "nowrap", right: "0px", mt:"10px" }}>
             {/*<SearchIcon fontSize="large" sx={{color:"gray",  cursor: "pointer", display: { md: "none", xs: "block" }, marginRight: "20px" }}/>*/}
             <CachedIcon fontSize="large" sx={{color:"gray",  cursor: "pointer", marginRight: "20px", '@media (max-width: 768px)': { marginRight: '10px' } }} />
              <SettingsIcon fontSize="large" sx={{color:"gray", cursor: "pointer", marginRight: "20px", '@media (max-width: 768px)': { marginRight: '10px' } }} />

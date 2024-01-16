@@ -1,32 +1,34 @@
-from django.contrib.auth.models import User
 from django.db import models
+from account.models import Account
+
 
 
 class Notes(models.Model):
     title = models.CharField(max_length=200, blank=True)
     text = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="note_creator")
+    creator = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="creator")
     is_in_basket = models.BooleanField(default=False)
+    extra_user = models.ManyToManyField(Account, through="NoteToUser", related_name='extra_user')
 
     def __str__(self):
         return self.title
 
-# class NotesBasket(models.Model):
-#     notes = models.ForeignKey(Notes, on_delete=models.CASCADE)
+class NoteToUser(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    note = models.ForeignKey('Notes', on_delete=models.CASCADE)
 
-class Attachments(models.Model):
-    note = models.ForeignKey(Notes, on_delete=models.CASCADE,)
-    file = models.FileField(upload_to='')
-
-class Sharing(models.Model):
-    users = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name="user")
-    note = models.ForeignKey(Notes, on_delete=models.CASCADE, related_name="sharing_note")
     can_edit = models.BooleanField(default=False)
 
 
+class Attachments(models.Model):
+    note = models.ForeignKey(Notes, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='')
+
+
+
 class Comments(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments_user")
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="comments_user")
     note = models.ForeignKey(Notes, on_delete=models.CASCADE, related_name="comments_note")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

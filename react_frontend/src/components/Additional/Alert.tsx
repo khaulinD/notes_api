@@ -1,38 +1,65 @@
-import * as React from 'react';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import {Alert} from "@mui/material";
+import React from "react";
+import {Alert, Snackbar, Stack} from "@mui/material";
 
-// const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-//   props,
-//   ref,
-// ) {
-//   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-// });
+export default function CustomizedSnackbars({ type }) {
+  const [openError, setOpenError] = React.useState(false);
+  const [openWarning, setOpenWarning] = React.useState(false);
+  const [openInfo, setOpenInfo] = React.useState(false);
+  const [openSuccess, setOpenSuccess] = React.useState(false);
+  const [text, setText] = React.useState("")
 
-export default function CustomizedSnackbars() {
-  const [open, setOpen] = React.useState(false);
+  React.useEffect(() => {
+    switch (type){
+        case 400:
 
-  const handleClick = () => {
-    setOpen(true);
-  };
+          setOpenError(true);
+          break; // Add break statement to prevent fallthroughswitch (type){
+        case 403:
+            setText("Forbidden")
+            setOpenError(true);
+          break; // Add break statement to prevent fallthroughswitch (type){
+        case 401:
+
+          setText("Unauthorized")
+          setOpenError(true);
+          break; // Add break statement to prevent fallthrough
+        case 409:
+          setText("Data has already use")
+          setOpenError(true);
+          break; // Add break statement
+        default:
+          break; // Add break statement
+      }
+  }, [type]);
 
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
-
-    setOpen(false);
+    setOpenError(false);
+    setOpenWarning(false);
+    setOpenInfo(false);
+    setOpenSuccess(false);
   };
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>
-      <Button variant="outlined" onClick={handleClick}>
-        Open success snackbar
-      </Button>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar open={openError} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+            {text}
+          </Alert>
+        </Snackbar>
+      <Snackbar open={openWarning} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="warning" sx={{ width: '100%' }}>
+          This is a warning message!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={openInfo} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="info" sx={{ width: '100%' }}>
+          This is an information message!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={openSuccess} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
           This is a success message!
         </Alert>

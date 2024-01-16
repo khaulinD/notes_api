@@ -9,34 +9,98 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import Link from "@mui/material/Link";
+import {BASE_URL} from '../../config';
+import { useEffect, useState } from "react";
+import { useAuthService } from "../../services/AuthServices.ts";
+import useAxiosWithJwtInterceptor from "../../helper/jwtinterseptor.ts";
+
+interface UserInfo {
+  logo: string;
+  email: string;
+  username: string;
+}
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const user_id = localStorage.getItem("user_id");
+  // const { getUserInfo } = useAuthServiceContext();
+  const jwtAxios = useAxiosWithJwtInterceptor()
+
+  useEffect(() => {
+  const getUserInformation = async () => {
+    try {
+      const response = await jwtAxios.get(`${BASE_URL}/accounts/?user_id=${Number(user_id)}`);
+      const userData = response.data[0]; // Assuming the first user data is what you need
+      setUserInfo(userData);
+      sessionStorage.setItem('userInfo', JSON.stringify(userData));
+    } catch (err: any) {
+      return err.response.status;
+    }
+  }
+
+  if (user_id) {
+    const userInfoFromStorage = sessionStorage.getItem("userInfo");
+    if (userInfoFromStorage) {
+      const userInfoObject: UserInfo = JSON.parse(userInfoFromStorage);
+      setUserInfo(userInfoObject);
+    } else {
+      getUserInformation();
+    }
+  }
+}, [user_id]);
+
+//   useEffect(() => {
+//     const getUserInformation = async () => {
+//   try {
+//     const response = await jwtAxios.get(`${BASE_URL}/accounts/?user_id=${Number(user_id)}`);
+//     sessionStorage.setItem('userInfo', JSON.stringify(response.data[0]));
+//     setUserInfo(response.data);
+//   } catch (err: any) {
+//     return err.response.status;
+//   }
+// }
+//     const userInfoFromStorage = sessionStorage.getItem("userInfo");
+//     if (userInfoFromStorage) {
+//       const userInfoObject: UserInfo = JSON.parse(userInfoFromStorage);
+//       setUserInfo(userInfoObject);
+//     } else {
+//       getUserInformation()
+//     }
+//       console.log(userInfo)
+//
+//   }, [user_id]);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const { logout } = useAuthService();
+
   return (
     <React.Fragment>
-      {/*<Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>*/}
-      {/*  <Typography sx={{ minWidth: 100 }}>Contact</Typography>*/}
-      {/*  <Typography sx={{ minWidth: 100 }}>Profile</Typography>*/}
-        <Tooltip title="Account settings">
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 2 }}
-            aria-controls={open ? 'account-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-          >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-          </IconButton>
-        </Tooltip>
-      {/*</Box>*/}
+     <Tooltip title="Account settings">
+  <IconButton
+    onClick={handleClick}
+    size="small"
+    sx={{ ml: 2, mt: -1 }}
+    aria-controls={open ? 'account-menu' : undefined}
+    aria-haspopup="true"
+    aria-expanded={open ? 'true' : undefined}
+  >
+    {userInfo !== null && userInfo.logo ? (
+        <Avatar src={`${BASE_URL}${userInfo.logo}`} alt="user_logo" />
+      ) : (
+        <Avatar />
+      )}
+  </IconButton>
+</Tooltip>
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
@@ -72,12 +136,11 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem onClick={handleClose}>
-          <Avatar /> Profile
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
-        </MenuItem>
+        <Link href="/login">
+          <MenuItem onClick={handleClose}>
+            My account
+          </MenuItem>
+        </Link>
         <Divider />
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
@@ -91,7 +154,7 @@ export default function AccountMenu() {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={logout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
