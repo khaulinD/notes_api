@@ -1,11 +1,11 @@
 import {useEffect, useState} from "react";
 import useAxiosWithJwtInterceptor from "../helper/jwtinterseptor.ts";
-import {fetchContent, fetchContentWithTitle, updateIsInBasket} from "../components/requests/request_to_db.ts";
+import {fetchContentWithTitle, updateIsInBasket} from "../components/requests/request_to_db.ts";
 import {Box} from "@mui/material";
 import PrimaryAppBar from "../components/PrimaryAppBar.tsx";
 import SideBar from "../components/SideBar.tsx";
 import Scroll from "../components/Scroll.tsx";
-import NewNote from "../components/NotesComponents/NewNote.tsx";
+// import NewNote from "../components/NotesComponents/NewNote.tsx";
 import NotesList from "../components/NotesList.tsx";
 
 const SharingNotes = () =>{
@@ -53,10 +53,10 @@ const [searchResults, setSearchResults] = useState<any[]>([]);
     useEffect(() => {
     setStateResults(searchResults);
     }, [searchResults]);
-  const addNoteToResults = (title: string, text: string) => {
-  const newNote = { title, text };
-  setStateResults([newNote, ...stateResults]);
-};
+  // const addNoteToResults = (title: string, text: string) => {
+  // const newNote = { title, text };
+  // setStateResults([newNote, ...stateResults]);
+  //   };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>

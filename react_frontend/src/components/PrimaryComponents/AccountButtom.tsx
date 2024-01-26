@@ -14,7 +14,7 @@ import {BASE_URL} from '../../config';
 import { useEffect, useState } from "react";
 import { useAuthService } from "../../services/AuthServices.ts";
 import useAxiosWithJwtInterceptor from "../../helper/jwtinterseptor.ts";
-
+import FeedbackIcon from '@mui/icons-material/Feedback';
 interface UserInfo {
   logo: string;
   email: string;
@@ -28,16 +28,18 @@ export default function AccountMenu() {
   const user_id = localStorage.getItem("user_id");
   // const { getUserInfo } = useAuthServiceContext();
   const jwtAxios = useAxiosWithJwtInterceptor()
-
   useEffect(() => {
   const getUserInformation = async () => {
     try {
       const response = await jwtAxios.get(`${BASE_URL}/accounts/?user_id=${Number(user_id)}`);
-      const userData = response.data[0]; // Assuming the first user data is what you need
+        const userData = response.data[0]; // Assuming the first user data is what you need
       setUserInfo(userData);
       sessionStorage.setItem('userInfo', JSON.stringify(userData));
+      console.log("get_user:",userData)
+
     } catch (err: any) {
-      return err.response.status;
+      console.log("error getting data", err)
+      logout()
     }
   }
 
@@ -154,6 +156,14 @@ export default function AccountMenu() {
           </ListItemIcon>
           Settings
         </MenuItem>
+        <Link href="/feedback">
+        <MenuItem  onClick={handleClose}>
+          <ListItemIcon>
+            <FeedbackIcon fontSize="small" />
+          </ListItemIcon>
+          FeedBack
+        </MenuItem>
+          </Link>
         <MenuItem onClick={logout}>
           <ListItemIcon>
             <Logout fontSize="small" />

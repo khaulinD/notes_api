@@ -18,20 +18,26 @@ const Home = () => {
     const jwtAxios = useAxiosWithJwtInterceptor()
     const [stateResults, setStateResults] = useState(searchResults);
   // const [resultsNote, setResults] = useState<Note[] | null>(results);
+  const [isFetched, setIsFetched] = useState(false)
 
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const noteResults = await fetchContent("notes", false, jwtAxios);
-      setSearchResults(noteResults);
-      console.log("fetchData called");
-    } catch (error) {
-      console.log("Can't send request");
-    }
+useEffect( ()  => {
+  const fetchData =  async () => {
+      try {
+          const noteResults = await fetchContent("notes", false, jwtAxios);
+          setStateResults(noteResults);
+          console.log("fetchData called");
+          setIsFetched(true)
+      } catch (error) {
+          console.log("Can't send request", error);
+
+      }
   };
+  if(!isFetched){
+    fetchData();
+  }
 
-  fetchData();
+
 }, []); // Add the specific dependency here
   const handleSearch = async (searchText: string) => {
     const noteResultsWithFilter: any = await fetchContentWithTitle("notes", searchText, false, jwtAxios);
@@ -40,13 +46,16 @@ useEffect(() => {
   };
      const deleteNote = async (index: number) => {
     try {
-      const newNotes = [...stateResults];
-      const noteId = newNotes[index].id;
-      newNotes.splice(index, 1);
-      setStateResults(newNotes); // Обновить состояние сразу
 
-      // Выполнить удаление и обновление в базе данных
-      await updateIsInBasket(noteId, true, jwtAxios);
+        const newNotes = [...stateResults];
+        const noteId = newNotes[index].id;
+         const updateIsInBasketStatus =  await updateIsInBasket(noteId, true, jwtAxios);
+      if (updateIsInBasketStatus===200) {
+        newNotes.splice(index, 1);
+        setStateResults(newNotes); // Обновить состояние сразу
+
+        // Выполнить удаление и обновление в базе данных
+      }
     } catch (error) {
       console.error("Error deleting note:", error);
     }
@@ -64,10 +73,11 @@ useEffect(() => {
     useEffect(() => {
     setStateResults(searchResults);
     }, [searchResults]);
-  const addNoteToResults = (title: string, text: string) => {
-  const newNote = { title, text };
-  setStateResults([newNote, ...stateResults]);
-};
+
+    const addNoteToResults =async (data: any) => {
+      const newNote =await data;
+      setStateResults([newNote, ...stateResults]);
+    };
 
   return(
     <Box sx={{ display: 'flex', flexDirection: 'column'}}>
@@ -80,7 +90,7 @@ useEffect(() => {
     <Box sx={{ flex: '3', minWidth: 0}}>
       <Scroll>
        <NewNote onAddNote={addNoteToResults} />
-        <NotesList
+      <NotesList
            results={stateResults}
           setStateResults={setStateResults}
            isSpecial={false}

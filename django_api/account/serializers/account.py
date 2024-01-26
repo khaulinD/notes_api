@@ -5,20 +5,20 @@ from account.models import Account
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
-
+import logging
+logger = logging.getLogger(__name__)
 class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ("username", "email", "logo", "is_verified", "password")
+        fields = ("username", "email", "logo", "is_verified")
 
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ("username", "password", "first_name", "last_name", "email")
+        fields = ("username", "password", "first_name", "last_name", "email", "is_verified")
 
         def is_valid(self, *, raise_exception=False):
             valid = super().is_valid(raise_exception=raise_exception)
@@ -39,10 +39,13 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token["example"] = "example"
         return token
+
+
 
     def validate(self, attrs):
         data = super().validate(attrs)

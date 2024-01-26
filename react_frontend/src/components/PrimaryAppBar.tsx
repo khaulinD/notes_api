@@ -30,11 +30,12 @@ interface PrimaryAppBarProps {
 
 
 const PrimaryAppBar: React.FC<PrimaryAppBarProps> = ({ onSearch, setData, sideBarActivity}) => {
-  const [isSearched, setIsSearched] = useState(false); // State to track search
+  // const [isSearched, setIsSearched] = useState(false); // State to track search
   const [searchText, setSearchText] = useState(""); // State for search text
   const [notesPosition, setNotesPosition] = useState(false); // State for notes position
     const [showToogleDraw, setShowToogleDraw] = useState(false);
 
+    const isSearched = false
 
   useEffect(() => {
     const handleResize = () => {

@@ -15,8 +15,8 @@ urlpatterns_account = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     # path('home/', views.AccountViewSet.as_view(), name ='home'),
-    path('accounts/logout/', views.LogoutView.as_view(), name='logout'),
-    path("accounts/register/", views.RegisterView.as_view(), name='register'),
-    path("<uidb64>/<token>/", views.activate_user, name='activate_user'),
-    path("", include(router.urls))
+    path('api/accounts/logout/', views.LogoutView.as_view(), name='logout'),
+    path("api/accounts/register/", views.RegisterView.as_view(), name='register'),
+    path("api/<uidb64>/<token>/", views.activate_user, name='activate_user'),
+    path("api/", include(router.urls))
 ]

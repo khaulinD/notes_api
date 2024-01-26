@@ -44,6 +44,7 @@ export default function Register() {
   const secondName = data.get("lastName");
     if (username!= null){
       setloadOpen(true)
+      // @ts-ignore
       const status = await register(username, password, email, firstName, secondName);
       switch (status){
         case 400:
@@ -140,7 +141,6 @@ export default function Register() {
                 <TextField
                   autoComplete="given-name"
                   name="firstName"
-                  required
                   fullWidth
                   id="firstName"
                   label="First Name"
@@ -149,7 +149,6 @@ export default function Register() {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  required
                   fullWidth
                   id="lastName"
                   label="Last Name"
@@ -169,11 +168,12 @@ export default function Register() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-
+                  required
                   fullWidth
                   id="username"
                   label="Username"
                   name="username"
+
                 />
               </Grid>
               <Grid item xs={12}>
@@ -184,7 +184,6 @@ export default function Register() {
                   label="Password"
                   type="password"
                   id="password"
-                  autoComplete="new-password"
                 />
               </Grid>
               <Grid item xs={12}>
