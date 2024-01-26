@@ -1,0 +1,67 @@
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./django_api
+#      dockerfile: django_api/Dockerfile
+    ports:
+      - "8000:8000"
+#    volumes:
+#      - static:/apps/backend/static
+    env_file:
+      - ./django_api/.env
+    depends_on:
+      - database
+
+  database:
+    image: postgres:14.6-alpine
+    container_name: database
+    restart: always
+    env_file:
+      - ./django_api/.env
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always   #c 26 по 30 строку(вставлен новый фрагмент)
+    ports:
+      - 8080:8080
+
+  redis:
+    image: redis:7.2.4-alpine
+    hostname: redis
+
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./react_frontend
+#      dockerfile: react_frontend/Dockerfile
+#    image: node:18-alpine
+    ports:
+      - "3000:3000"
+    volumes:
+      - node_modules:/react_frontend/node_modules
+      - frontend:/app/frontend/dist
+
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - static:/backend/static
+      - frontend:/var/www/frontend
+
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  pgdbdata: null
+  node_modules:
+  static:
+  frontend:

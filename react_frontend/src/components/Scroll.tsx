@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useCallback, useEffect, useRef } from "react";
+import { useRef } from "react";
 
 interface ScrollProps {
   children: React.ReactNode;

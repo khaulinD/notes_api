@@ -11,12 +11,12 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from .emails import verification_email
+from .email_verification.emails import verification_email
 from .filters.account_filter import AccountFilter
 from .models import Account
 # from .schemas import user_list_docs
 from .serializers.account import AccountSerializer, MyTokenObtainPairSerializer, RegisterSerializer, LogoutSerializer
-from .utils import generate_token
+from .email_verification.utils import generate_token
 
 
 

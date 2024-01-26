@@ -1,7 +1,7 @@
 import React from "react";
 import {Alert, Snackbar, Stack} from "@mui/material";
 
-export default function CustomizedSnackbars({ type }) {
+export default function CustomizedSnackbars({ type }:{ type: number }) {
   const [openError, setOpenError] = React.useState(false);
   const [openWarning, setOpenWarning] = React.useState(false);
   const [openInfo, setOpenInfo] = React.useState(false);
@@ -32,7 +32,7 @@ export default function CustomizedSnackbars({ type }) {
       }
   }, [type]);
 
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }

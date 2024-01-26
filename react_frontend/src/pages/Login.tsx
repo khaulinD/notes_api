@@ -12,15 +12,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useAuthService } from "../services/AuthServices.ts"; // Импортируйте из вашего файла с логикой
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useAuthServiceContext } from '../context/AuthContext.tsx';
 import CustomizedSnackbars from "../components/Additional/Alert.tsx";
 import {useState} from "react";
 
 const Login = () => {
   const defaultTheme = createTheme();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const {login} = useAuthServiceContext();
   const [ alertCode, setAlertCode] = useState(0)
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

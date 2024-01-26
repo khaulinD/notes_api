@@ -4,6 +4,6 @@ export interface AuthServiceProps {
     logout: () => void;
     getUserInfo: (user_id:number) =>any;
     // refreshAccessToken: () => Promise<void>
-    register: (username: string, password: string, email:string, firstName:string, secondName:string) => Promise<any>;
+    register: (username: File | string, password: File | string, email: File | string, firstName: File | string, secondName: File | string) => Promise<any>;
     check_email_verify: (user_id: string)=> Promise<any>;
 }

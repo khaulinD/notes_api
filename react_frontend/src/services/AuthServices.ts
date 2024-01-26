@@ -32,17 +32,16 @@ export function useAuthService(): AuthServiceProps {
 };
 
   const login = async (username: string, password: string): Promise<number | void> => {
-      console.log("sadf")
     try {
       const response = await axios.post(
-        `${BASE_URL}/api/token/`,
+        `${BASE_URL}/token/`,
         {
           username,
           password,
         },
         { withCredentials: true }
       );
-        console.log(response.data)
+        console.log(response)
       const user_id = response.data.user_id;
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("user_id", user_id);
@@ -82,6 +81,10 @@ export function useAuthService(): AuthServiceProps {
 
             sessionStorage.clear()
         } catch (refreshError) {
+            localStorage.clear()
+            sessionStorage.clear()
+            setIsLoggedIn(false);
+            navigate("/login")
             return Promise.reject(refreshError)
         }
 
@@ -107,7 +110,7 @@ const register = async (
     );
 
     const loginResponse = await axios.post<LoginResponse>(
-      `${BASE_URL}/api/token/`,
+      `${BASE_URL}/token/`,
       { username, password },
       { withCredentials: true }
     );
@@ -136,34 +139,33 @@ const register = async (
   }
 };
 
-    const check_email_verify = async (user_id: string) =>{
-          try {
-            // const token = access_token; // Замените на действительный JWT токен пользователя
-            const config = {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("access")}`,
-              },
-              withCredentials: true,
-            };
-            const response = await axios.get(`${BASE_URL}/accounts/?user_id=${user_id}`, config);
-            console.log(response.data[0].is_verified);
-            if (response.data[0].is_verified){
-                localStorage.setItem("isLoggedIn", "true");
-                setIsLoggedIn(true);
-                localStorage.setItem("email_verify", "true")
+const check_email_verify = async (user_id: string) =>{
+      try {
+        // const token = access_token; // Замените на действительный JWT токен пользователя
+        const config = {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access")}`,
+          },
+          withCredentials: true,
+        };
+        const response = await axios.get(`${BASE_URL}/accounts/?user_id=${user_id}`, config);
+        console.log(response.data[0].is_verified);
+        if (response.data[0].is_verified){
+            localStorage.setItem("isLoggedIn", "true");
+            setIsLoggedIn(true);
+            localStorage.setItem("email_verify", "true")
 
-                navigate("/")
-                return response.data;
-            }else{
-                console.log("fdas")
-                return response.status
-            }
-              console.log("xyi")
-          } catch (err: any) {
-              console.log("verified error")
-            return err.response.status;
-          }
-    };
+            navigate("/")
+            return response.data;
+        }else{
+            return response.status
+        }
+      } catch (err: any) {
+          console.log("verified error")
+        return err.response.status;
+      }
+};
 
-  return { login, logout, isLoggedIn, getUserInfo, register, check_email_verify};
+  // @ts-ignore
+    return { login, logout, isLoggedIn, getUserInfo, register, check_email_verify};
 }

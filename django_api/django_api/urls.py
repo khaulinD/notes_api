@@ -7,6 +7,7 @@ from rest_framework import routers
 from notes import views
 
 from account.urls import urlpatterns_account
+from notes.urls import urlpatterns_notes
 from users_communication.consumers import NotesConsumer
 from users_communication.views import SharingViewSet
 router = routers.DefaultRouter()
@@ -22,9 +23,9 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
 
-]+urlpatterns_account
+] + urlpatterns_account + urlpatterns_notes
 
 # websocket_urlpatterns = [
 #     path(r'ws/note/', NotesConsumer.as_asgi()),

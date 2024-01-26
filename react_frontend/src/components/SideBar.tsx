@@ -1,5 +1,5 @@
 import {
-    Box, Hidden, Link,
+    Box, Link,
     Typography,
 } from "@mui/material";
 import "./styles/SideBar.css"

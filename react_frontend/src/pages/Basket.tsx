@@ -36,13 +36,23 @@ const Basket: React.FC = () => {
         setSideBar(false);
       }
     }
-    const restoreNote = async (index: number) => {
-        const  newNotes = [...searchResults];
-        const noteId = newNotes[index].id
+
+   const restoreNote = async (index: number) => {
+    try {
+
+        const newNotes = [...searchResults];
+        const noteId = newNotes[index].id;
+         const updateIsInBasketStatus =  await updateIsInBasket(noteId, false, jwtAxios);
+      if (updateIsInBasketStatus===200) {
         newNotes.splice(index, 1);
-        await setSearchResults(newNotes);
-        await updateIsInBasket(noteId,false, jwtAxios);
-    };
+        setSearchResults(newNotes); // Обновить состояние сразу
+
+        // Выполнить удаление и обновление в базе данных
+      }
+    } catch (error) {
+      console.error("Error deleting note:", error);
+    }
+  };
     const deleteNote = async (index: number) => {
         const  newNotes = [...searchResults];
         const noteId = newNotes[index].id

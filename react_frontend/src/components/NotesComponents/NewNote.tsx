@@ -1,26 +1,27 @@
-import React, { useState } from "react";
-import { Box, Paper, TextField, IconButton, Typography, ClickAwayListener } from "@mui/material";
+import { useState } from "react";
+import { Box, Paper, TextField, IconButton, ClickAwayListener } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from '@mui/icons-material/Close';
 import sendDataToServer  from "./sendNote.ts"
 import useAxiosWithJwtInterceptor from "../../helper/jwtinterseptor.ts";
 
 
-const NewNote = ({onAddNote }) => {
+const NewNote = ({ onAddNote }:{ onAddNote: any}) => {
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [fullAdd, setFullAdd] = useState(false);
   const jwtAxios = useAxiosWithJwtInterceptor()
-  const handleAddNote = () => {
+  const handleAddNote =  () => {
 
     if (text.trim() !== "") {
-      sendDataToServer(title,text,jwtAxios)
-        // addDataToDictionary(title, text);
-       onAddNote(title, text);
+      const newNote = sendDataToServer(title,text,jwtAxios)
+      console.log(newNote)
+       onAddNote(newNote);
       setTitle("");
       setText("");
     }
     setFullAdd(false);
+    return true
   };
 
   const openFullNoteContext = () => {
@@ -81,29 +82,4 @@ const NewNote = ({onAddNote }) => {
   );
 };
 export default NewNote;
-// const App = () => {
-//   const [notes, setNotes] = useState<{ title: string; text: string }[]>([]);
-//
-//   const handleAddNote = (title: string, text: string) => {
-//     setNotes([...notes, { title, text }]);
-//   };
-//
-//   return (
-//     <div>
-//       <Typography variant="h5" align="center" mt={2}>
-//         Google Keep
-//       </Typography>
-//       <NewNote onAddNote={handleAddNote} />
-//       <Box mt={2}>
-//         {notes.map((note, index) => (
-//           <Paper key={index} elevation={3} sx={{ width: 400, padding: 2, marginBottom: 2 }}>
-//             <Typography variant="h6">{note.title}</Typography>
-//             <Typography>{note.text}</Typography>
-//           </Paper>
-//         ))}
-//       </Box>
-//     </div>
-//   );
-// };
-//
-// export default App;
+

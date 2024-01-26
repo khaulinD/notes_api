@@ -23,8 +23,8 @@ interface Note {
 
 interface NotesListProps {
   results: Note[];
-  setStateResults: (newResults: Note[]) => void;
-  restoreNote: (index: number) => void;
+  setStateResults?: (newResults: Note[]) => void;
+  restoreNote?: (index: number) => void;
   deleteNote: (index: number) => void;
   isSpecial: boolean;
   positionData: boolean;
@@ -45,6 +45,7 @@ const NotesList: React.FC<NotesListProps> = ({ results, setStateResults, restore
   const updateNote = (index: number, updatedNote: any) => {
     const newResults = [...results];
     newResults[index] = updatedNote
+    // @ts-ignore
     setStateResults(newResults);
     setSelectedNoteIndex(index);
   };
@@ -53,6 +54,8 @@ const NotesList: React.FC<NotesListProps> = ({ results, setStateResults, restore
   const handleNoteClick = (index: number) => setSelectedNoteIndex(index);
   const handleCloseRefactorNote = () => setSelectedNoteIndex(null);
   const handleCloseAddUser = () => setAddUserToNoteParam({ open: false, index: null });
+
+  console.log(results)
 
   return (
     <Box sx={{marginBottom:"60px"}}>
@@ -81,7 +84,7 @@ const NotesList: React.FC<NotesListProps> = ({ results, setStateResults, restore
       )}
 
       {/* Grid of Note Cards */}
-      {results !== null && (
+      {results !== undefined && results.length > 0 && (
         <Grid container spacing={2} alignItems={positionData ? 'center' : 'flex-end'} direction={positionData ? 'column' : 'row'}>
           {results.map((result, index) => (
             <Grid item xs={12} sm={6} md={4} key={index} sx={{ width: '100%' , marginBottom: '40px' }}>
@@ -131,6 +134,7 @@ const NotesList: React.FC<NotesListProps> = ({ results, setStateResults, restore
                         color="inherit"
                         aria-label="menu"
                         sx={{ mr: 2, padding: "6px" }}
+                         // @ts-ignore
                         onClick={() => restoreNote(index)}
                       >
                         <RestoreFromTrashIcon />
