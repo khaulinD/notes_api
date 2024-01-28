@@ -3,17 +3,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include, re_path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from rest_framework import routers
-from notes import views
 
 from account.urls import urlpatterns_account
 from notes.urls import urlpatterns_notes
-from users_communication.consumers import NotesConsumer
-from users_communication.views import SharingViewSet
-router = routers.DefaultRouter()
-router.register(r'notes', views.NotesViewSet)
-router.register(r'comments', views.CommentViewSet)
-router.register(r'sharing', SharingViewSet)
+from users_communication.urls import urlpatterns_user_communication
 
 
 
@@ -23,9 +16,8 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),
-    path('api/', include(router.urls)),
 
-] + urlpatterns_account + urlpatterns_notes
+] + urlpatterns_account + urlpatterns_notes + urlpatterns_user_communication
 
 # websocket_urlpatterns = [
 #     path(r'ws/note/', NotesConsumer.as_asgi()),

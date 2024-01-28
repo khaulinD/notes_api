@@ -55,7 +55,7 @@ INSTALLED_APPS = [
 
     "account",
     "notes",
-    # "users_communication",
+    "users_communication",
 
 ]
 
@@ -180,7 +180,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1000),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -208,33 +208,52 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
+# LOGGING = {
+#     "version": 1,
+#     "handlers": {
+#         "console": {
+#             "class": "logging.StreamHandler"
+#         }
+#     },
+#     "loggers": {
+#         "django.db.backends": {
+#             "handlers": ["console"],
+#             "level": "DEBUG"
+#         }
+#     }
+# }
 LOGGING = {
-    "version": 1,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler"
-        }
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
     },
+    # 'root': {
+    #     'handlers': ['console'],
+    #     'level': 'INFO',  # Lvl of debugging: DEBUG, INFO, WARNING, ERROR, CRITICAL
+    # },
     "loggers": {
-        "django.db.backends": {
-            "handlers": ["console"],
-            "level": "DEBUG"
+            "django.db.backends": {
+                "handlers": ["console"],
+                "level": "DEBUG"
+            }
         }
-    }
 }
-
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://redis:6379",
-        # "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": "redis://redis:6379/1",
+        # "LOCATION": "redis://127.0.0.1:6379/1",
         "OPTIONS": {
             "db": "1",
         },
     },
 
 }
-CELERY_BROKER_URL = "redis://redis/0",
+CELERY_BROKER_URL = "redis://redis:6379/0"
+# CELERY_BROKER_URL = "redis://127.0.0.1:6379/0",
 CELERY_TIMEZONE = "UTC"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60

@@ -156,53 +156,53 @@
 #             "message": message
 #         }))
 
-from channels.generic.websocket import AsyncWebsocketConsumer
-from channels.db import database_sync_to_async
-from django.db.models import Q
-from notes.models import Notes
-
-
-class NotesConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        self.user = self.scope['user']
-        await self.accept()
-
-        # Get all notes for which the user is a creator or extra user
-        user_notes = await self.get_user_notes(self.user)
-
-        # Create a group for each note and add the user to those groups
-        for note in user_notes:
-            await self.channel_layer.group_add(f"note_{note.id}", self.channel_name)
-
-    async def disconnect(self, close_code):
-        # Disconnect from all groups on WebSocket disconnect
-        user_notes = await self.get_user_notes(self.user)
-        for note in user_notes:
-            await self.channel_layer.group_discard(f"note_{note.id}", self.channel_name)
-
-    async def receive(self, text_data):
-        # Handle incoming WebSocket messages
-        pass
-
-    @database_sync_to_async
-    def get_user_notes(self, user):
-        # Fetch all notes where the user is the creator or an extra user
-        return Notes.objects.filter(Q(creator=user) | Q(extra_user=user))
-
-    async def send_note_message(self, note_id, message):
-        # Send a message to a specific note group
-        await self.channel_layer.group_send(
-            f"note_{note_id}",
-            {
-                "type": "note.message",
-                "message": message,
-            }
-        )
-
-    async def note_message(self, event):
-        # Receive message from note group
-        message = event['message']
-
-        # Send message to WebSocket
-        await self.send(text_data=message)
+# from channels.generic.websocket import AsyncWebsocketConsumer
+# from channels.db import database_sync_to_async
+# from django.db.models import Q
+# from notes.models import Notes
+#
+#
+# class NotesConsumer(AsyncWebsocketConsumer):
+#     async def connect(self):
+#         self.user = self.scope['user']
+#         await self.accept()
+#
+#         # Get all notes for which the user is a creator or extra user
+#         user_notes = await self.get_user_notes(self.user)
+#
+#         # Create a group for each note and add the user to those groups
+#         for note in user_notes:
+#             await self.channel_layer.group_add(f"note_{note.id}", self.channel_name)
+#
+#     async def disconnect(self, close_code):
+#         # Disconnect from all groups on WebSocket disconnect
+#         user_notes = await self.get_user_notes(self.user)
+#         for note in user_notes:
+#             await self.channel_layer.group_discard(f"note_{note.id}", self.channel_name)
+#
+#     async def receive(self, text_data):
+#         # Handle incoming WebSocket messages
+#         pass
+#
+#     @database_sync_to_async
+#     def get_user_notes(self, user):
+#         # Fetch all notes where the user is the creator or an extra user
+#         return Notes.objects.filter(Q(creator=user) | Q(extra_user=user))
+#
+#     async def send_note_message(self, note_id, message):
+#         # Send a message to a specific note group
+#         await self.channel_layer.group_send(
+#             f"note_{note_id}",
+#             {
+#                 "type": "note.message",
+#                 "message": message,
+#             }
+#         )
+#
+#     async def note_message(self, event):
+#         # Receive message from note group
+#         message = event['message']
+#
+#         # Send message to WebSocket
+#         await self.send(text_data=message)
 

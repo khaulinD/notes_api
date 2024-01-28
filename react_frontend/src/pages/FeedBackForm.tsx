@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
+import axios from "axios";
+// import axios from 'axios';
 
 interface Styles {
   [key: string]: React.CSSProperties;
@@ -14,10 +16,33 @@ const FeedBackForm: React.FC = () => {
   const [currentValue, setCurrentValue] = useState<number>(0);
   const [hoverValue, setHoverValue] = useState<number | undefined>(undefined);
   const stars = Array(5).fill(0);
+  const [feedback, setFeedback] = useState('');
+  const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        if(feedback!="") {
+          try {
+            const userInfoString = sessionStorage.getItem("userInfo")
+            const userId = localStorage.getItem("user_id")
+            if (userInfoString !== null && userId !== null) {
 
-  // const sendFeedBack = () =>{
-  //
-  // }
+                // const userInfo = JSON.parse(userInfoString)
+                // const user_email = userInfo.email;
+              await axios.post('http://localhost:8000/api/feedback/', {message: feedback, sender:userId, stars: currentValue});
+              alert('Feedback submitted successfully!');
+              setFeedback('');
+              setCurrentValue(0);
+              } else {
+                console.error('userInfo is not available in sessionStorage');
+              }
+
+          } catch (error) {
+            console.error('Error submitting feedback:', error);
+          }
+        }else {
+          alert('Feedback don`t be empty!');
+        }
+    };
+
 
   const handleClick = (value: number) => {
     setCurrentValue(value);
@@ -33,7 +58,7 @@ const FeedBackForm: React.FC = () => {
 
   return (
     <div style={styles.container}>
-      <h2> React Ratings </h2>
+      <h2> Ratings </h2>
       <div style={styles.stars}>
         {stars.map((_, index) => (
           <FaStar
@@ -57,9 +82,11 @@ const FeedBackForm: React.FC = () => {
       <textarea
         placeholder="What's your experience?"
         style={styles.textarea}
+        value={feedback} onChange={(e) => setFeedback(e.target.value)}
+
       />
 
-      <button style={styles.button} >Submit</button>
+      <button style={styles.button} onClick={handleSubmit} >Submit</button>
     </div>
   );
 };

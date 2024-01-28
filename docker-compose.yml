@@ -6,8 +6,8 @@ services:
 #      dockerfile: django_api/Dockerfile
     ports:
       - "8000:8000"
-#    volumes:
-#      - static:/apps/backend/static
+    volumes:
+      - ./django_api:/apps/backend
     env_file:
       - ./django_api/.env
     depends_on:
@@ -53,12 +53,56 @@ services:
     ports:
       - "80:80"
     volumes:
-      - static:/backend/static
+      - static:/apps/backend
       - frontend:/var/www/frontend
 
     depends_on:
       - backend
       - frontend
+
+  worker:
+    build:
+      context: ./django_api
+    hostname: worker
+    entrypoint: celery
+    command: -A celery_app.app worker --loglevel=info
+    #for production:  --loglevel=warning, error
+    volumes:
+      - ./django_api:/apps/backend
+    env_file:
+      - ./django_api/.env
+    links:
+      - redis
+    depends_on: [ redis, database ]
+#
+#  worker2:
+#    build:
+#      context: ./django_api
+#    hostname: worker2
+#    entrypoint: celery
+#    command: -A ./django_api/celery_app.app worker --loglevel=info
+#    #for production:  --loglevel=warning, error
+#    volumes:
+#      - ./django_api:/apps/backend/static
+#    env_file:
+#      - ./django_api/.env
+#    links:
+#      - redis
+#    depends_on: [ redis, database ]
+
+  flower:
+    build:
+      context: ./django_api
+    hostname: flower
+    entrypoint: celery
+    command: -A celery_app.app flower
+    volumes:
+      - ./django_api:/apps/backend
+    links:
+      - redis
+    depends_on: [ redis ]
+    ports:
+      - "5555:5555"
 
 volumes:
   pgdbdata: null

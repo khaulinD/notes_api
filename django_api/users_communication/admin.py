@@ -1,4 +1,7 @@
-# from django.contrib import admin
+from django.contrib import admin
+
+from users_communication.models import Feedback
+
 #
 # from .models import Sharing
 #
@@ -8,3 +11,4 @@
 #     list_display = ("owner", "note", "can_edit", )
 #
 # admin.site.register(Sharing, SharingAdmin)
+admin.site.register(Feedback)

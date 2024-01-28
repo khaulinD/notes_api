@@ -35,9 +35,10 @@ function App() {
                         <Basket />
                     </ProtectedRoute>} />
                 <Route path="/feedback" element={
-                    <ProtectedRoute>
+                    // <ProtectedRoute>
                         <FeedBackForm />
-                    </ProtectedRoute>} />
+                    // </ProtectedRoute>
+                     }/>
 
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />

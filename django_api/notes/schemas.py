@@ -14,7 +14,7 @@ note_list_view = extend_schema(
         #
         # ),
         OpenApiParameter(
-            name="tilte",
+            name="title",
             type=OpenApiTypes.STR,
             location=OpenApiParameter.QUERY,
             description="Note title"

@@ -1,5 +1,6 @@
-# from django.db import models
-# from account.models import Account
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db import models
+from account.models import Account
 #
 # from notes.models import Notes
 
@@ -17,3 +18,8 @@
 #
 # class Account(models.Model):
 #     additional_note = models.ManyToManyField(Notes, through="NoteToUser")
+
+class Feedback(models.Model):
+    message = models.TextField()
+    sender = models.ForeignKey(Account, on_delete=models.CASCADE)
+    rating_stars = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])

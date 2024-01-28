@@ -20,6 +20,6 @@ python manage.py collectstatic --noinput
 echo "Static files collected"
 
 echo "Starting server..."
-gunicorn django_api.wsgi:application --preload --bind "0.0.0.0:${APP_PORT}" --workers 4
-
+gunicorn django_api.wsgi:application --reload --bind "0.0.0.0:${APP_PORT}" --workers 4
+#--preload
 #python manage.py runserver
